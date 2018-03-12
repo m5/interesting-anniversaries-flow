@@ -12,10 +12,18 @@ import "./App.css";
 const App = () => (
   <Router>
     <div>
+      <h1>Interesting Anniversaries</h1>
       <ul>
-        <li>
-          <Link to="/">Home</Link>
-        </li>
+        <Route exact path="/">
+          {({ match }) =>
+            match ? null : (
+              <li>
+                <Link to="/">Home</Link>
+              </li>
+            )
+          }
+        </Route>
+
         <li>
           <Link to="/about">About</Link>
         </li>

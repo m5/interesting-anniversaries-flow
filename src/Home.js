@@ -16,9 +16,8 @@ const Home = () => {
       <ul>
         {anniversaries.map(anniversary => (
           <li>
-            {format(anniversary.date, "YYYY-MM-DD")}
-            {anniversary.interestingNumber.value}
-            {anniversary.units}
+            On {format(anniversary.date, "YYYY-MM-DD")} you will be{" "}
+            {anniversary.interestingNumber.value} {anniversary.units} old!
           </li>
         ))}
       </ul>

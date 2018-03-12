@@ -2,12 +2,6 @@
 
 import type { InterestingNumberGenerator } from "../types";
 
-// function each(generator: () => IterableIterator<T>, mapper: (t: T) => mixed) {
-//   for (item of generator()) {
-//     mapper(item);
-//   }
-// }
-
 function* count(start: number = 0, step: number = 1) {
   let n = start;
   while (true) {
@@ -25,69 +19,56 @@ export function* powersOfTen(): InterestingNumberGenerator {
   }
 }
 
-powersOfTen;
+export function* powersOfTwo(): InterestingNumberGenerator {
+  for (const exponent of count()) {
+    yield {
+      category: "powers_of_two",
+      value: Math.pow(2, exponent)
+    };
+  }
+}
 
-const GENERATORS: Array<() => InterestingNumberGenerator> = [powersOfTen];
+export function* factorsOfTen(): InterestingNumberGenerator {
+  for (const powerOfTen of powersOfTen()) {
+    yield {
+      category: "factors_of_ten",
+      value: 2 * powerOfTen.value
+    };
+    yield {
+      category: "factors_of_ten",
+      value: 5 * powerOfTen.value
+    };
+  }
+}
+
+export function* repeatedDigits(): InterestingNumberGenerator {
+  // https://oeis.org/A010785
+  // Numbers with a single digit repeated.
+  // 1, 2, 3, ... 11, 22, 33, 44, 55, 66, 77, 88, 99, ...
+  // 111, 222, 333, ... 1111, 2222, 3333, ...
+  const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  // Start at 3-digit numbers, since 11, 22, etc. aren't very interesting.
+  for (const exponent of count(3)) {
+    const powerOfTen = Math.pow(10, exponent);
+    // https://oeis.org/A002275
+    const allOnes = (powerOfTen - 1) / 9;
+    for (const digit of digits) {
+      const value = digit * allOnes;
+      yield {
+        category: "repeated_digits",
+        value: value
+      };
+    }
+  }
+}
+
+const GENERATORS: Array<() => InterestingNumberGenerator> = [
+  powersOfTen,
+  powersOfTwo,
+  factorsOfTen,
+  repeatedDigits
+];
 export default GENERATORS;
-
-// def powers_of_ten():
-//     for exponent in count():
-//         value = 10 ** exponent
-//         with_commas = "{:,}".format(value)
-//         yield Number(
-//             value=value,
-//             display_value=with_commas,
-//             formatted_value=with_commas,
-//             category="powers of ten",
-//         )
-
-// def powers_of_two():
-//     # Start at 2^2=4 because 2^0=1 and 2^1=2 aren't interesting.
-//     for exponent in count(2):
-//         value = 2 ** exponent
-//         with_commas = "{:,}".format(value)
-//         yield Number(
-//             value=value,
-//             display_value="2^%s" % exponent,
-//             formatted_value=with_commas,
-//             category="powers of two",
-//         )
-
-// def factors_of_ten():
-//     # 2, 5, 20, 50, 200, 500, ... 2,000,000, 5,000,000, ...
-//     factors = (2, 5)
-//     for exponent in count():
-//         power_of_ten = 10 ** exponent
-//         for factor in factors:
-//             value = factor * power_of_ten
-//             with_commas = "{:,}".format(value)
-//             yield Number(
-//                 value=value,
-//                 display_value=with_commas,
-//                 formatted_value=with_commas,
-//                 category="factors of ten"
-//             )
-
-// def repeated_digits():
-//     # https://oeis.org/A010785
-//     # Numbers with a single digit repeated.
-//     # 1, 2, 3, ... 11, 22, 33, 44, 55, 66, 77, 88, 99, ...
-//     # 111, 222, 333, ... 1111, 2222, 3333, ...
-//     digits = range(1, 10)
-//     # Start at 3-digit numbers, since 11, 22, etc. aren't very interesting.
-//     for exponent in count(3):
-//         power_of_ten = 10 ** exponent
-//         # https://oeis.org/A002275
-//         all_ones = (power_of_ten - 1) // 9
-//         for digit in digits:
-//             value = digit * all_ones
-//             with_commas = "{:,}".format(value)
-//             yield Number(
-//                 value=value,
-//                 display_value=with_commas,
-//                 formatted_value=with_commas,
-//                 category="repeated digits",
-//             )
 
 // def counting_up():
 //     # https://oeis.org/A057137
@@ -105,11 +86,3 @@ export default GENERATORS;
 //             formatted_value=with_commas,
 //             category="ascending digits",
 //         )
-
-// GENERATORS = [
-//     powers_of_ten,
-//     powers_of_two,
-//     factors_of_ten,
-//     repeated_digits,
-//     counting_up,
-// ]
