@@ -28,12 +28,22 @@ const generate = (base: Date, minDate: Date, maxDate: Date): Anniversary[] => {
       if (anniversary.date > minDate) {
         anniversaries.push(anniversary);
       }
+      if (anniversaries.length > 1000) {
+        break;
+      }
     }
   });
   return anniversaries.sort((a, b) => a.date - b.date);
 };
 
 export default generate;
+
+export const makeKey = (anniversary: Anniversary) =>
+  `
+  ${anniversary.interestingNumber.value}
+  ${anniversary.units}
+  ${anniversary.interestingNumber.category}
+  `;
 
 // # Takes a base_time and generates an unsorted sequence of anniversaries from
 // # that base_time. All anniversaries < max_time will be generated.

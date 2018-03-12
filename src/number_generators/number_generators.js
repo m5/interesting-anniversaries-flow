@@ -64,7 +64,7 @@ export function* repeatedDigits(): InterestingNumberGenerator {
 
 const GENERATORS: Array<() => InterestingNumberGenerator> = [
   powersOfTen,
-  powersOfTwo,
+  // powersOfTwo,
   factorsOfTen,
   repeatedDigits
 ];

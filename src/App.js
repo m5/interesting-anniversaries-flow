@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 
 import Home from "./Home";
 import About from "./About";
@@ -32,8 +32,10 @@ const App = () => (
       <hr />
 
       <Route exact path="/" component={Home} />
-      <Route path="/about" component={About} />
-      <Route path="/:dateString" component={Anniversaries} />
+      <Switch>
+        <Route path="/about" component={About} />
+        <Route path="/:dateString" component={Anniversaries} />
+      </Switch>
     </div>
   </Router>
 );

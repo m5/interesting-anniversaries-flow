@@ -1,28 +1,32 @@
 // @flow
 import React from "react";
 
-import generate from "./anniversary_generator";
-import addYears from "date-fns/add_years";
-import format from "date-fns/format";
+import { withState } from "recompose";
+import Anniversaries from "./Anniversaries";
 
-const Home = () => {
-  const birthday = new Date(1987, 8, 5);
-  const now = Date.now();
-  const minDate = addYears(now, 0);
-  const maxDate = addYears(birthday, 150);
-  const anniversaries = generate(birthday, minDate, maxDate);
+const Home = ({ birthdayString, setBirthday }) => {
+  let birthday = undefined;
+  if (birthdayString) {
+    const [year, month, day] = birthdayString.split("-").map(s => parseInt(s));
+    if (year >= 1000) {
+      birthday = new Date(year, month - 1, day);
+    }
+  }
+  const anniversaries =
+    birthday === undefined ? null : <Anniversaries birthday={birthday} />;
   return (
     <div>
-      <ul>
-        {anniversaries.map(anniversary => (
-          <li>
-            On {format(anniversary.date, "YYYY-MM-DD")} you will be{" "}
-            {anniversary.interestingNumber.value} {anniversary.units} old!
-          </li>
-        ))}
-      </ul>
+      <h2>What is your birthday?</h2>
+      <p>
+        <input
+          type="date"
+          onChange={e => setBirthday(e.target.value)}
+          style={{ fontSize: "1em" }}
+        />
+      </p>
+      {anniversaries}
     </div>
   );
 };
 
-export default Home;
+export default withState("birthdayString", "setBirthday")(Home);
